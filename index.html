@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Siddharth Kumbharkar, AI/ML engineer: LLMs, speech, RAG and multi-agent systems.">
+<title>Siddharth Kumbharkar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Mukta:wght@500&display=swap">
+<style>
+:root{
+  --bg:#EDF0F5; --surface:#FFFFFF; --surface-2:#F5F7FB; --ink:#0D1526; --muted:#566079; --line:#D5DBE6; --grid:#DDE2EC;
+  --accent:#2C46E8; --accent-ink:#FFFFFF; --accent-soft:#E2E7FF;
+  --warm:#B86F00; --warm-soft:#FFF0D4; --bad:#D23F36; --bad-soft:#FDE5E3; --good:#1C8C5E;
+  --shadow:0 24px 60px -34px rgba(13,21,38,.45);
+  --display:"Unbounded", "Arial Black", system-ui, sans-serif;
+  --body:"Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --deva:"Mukta", "Noto Sans Devanagari", "Nirmala UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#090E18; --surface:#111A2B; --surface-2:#0D1523; --ink:#E7ECF6; --muted:#94A1BD; --line:#233049; --grid:#141D30;
+    --accent:#8193FF; --accent-ink:#0A0F1C; --accent-soft:#1A2450;
+    --warm:#FFB547; --warm-soft:#33260C; --bad:#FF7A70; --bad-soft:#3A1A18; --good:#3FBF8C;
+    --shadow:0 24px 60px -30px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#090E18; --surface:#111A2B; --surface-2:#0D1523; --ink:#E7ECF6; --muted:#94A1BD; --line:#233049; --grid:#141D30;
+  --accent:#8193FF; --accent-ink:#0A0F1C; --accent-soft:#1A2450;
+  --warm:#FFB547; --warm-soft:#33260C; --bad:#FF7A70; --bad-soft:#3A1A18; --good:#3FBF8C;
+  --shadow:0 24px 60px -30px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{margin:0}
+img{max-width:100%}
+@media (prefers-reduced-motion:no-preference){ html{scroll-behavior:smooth} }
+body{background:var(--bg); color:var(--ink); font:16px/1.6 var(--body); padding-inline:20px; padding-block:0 56px}
+.wrap{max-width:1160px; margin:0 auto}
+a{color:var(--accent); text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:6px}
+h1,h2,h3{font-family:var(--display); text-wrap:balance; margin:0; line-height:1.1}
+p,ul,dl,dd,figure{margin:0}
+.mono{font-family:var(--mono)}
+.label{font:500 12px/1.4 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+
+/* nav */
+.nav{position:sticky; top:env(safe-area-inset-top,0px); z-index:10; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--line); margin-inline:-20px; padding-inline:20px}
+.nav .wrap{display:flex; justify-content:space-between; align-items:center; gap:16px; padding-block:14px}
+.nav .mark{font:600 15px/1 var(--display); color:var(--ink); text-decoration:none; letter-spacing:-.01em}
+.nav nav{display:flex; gap:22px; align-items:center}
+.nav nav a{font:500 13px/1 var(--mono); color:var(--muted); text-decoration:none}
+.nav nav a:hover{color:var(--ink)}
+.nav nav a.cta{color:var(--accent-ink); background:var(--accent); padding:9px 14px; border-radius:999px}
+section{scroll-margin-top:72px}
+
+/* hero */
+.hero{position:relative; isolation:isolate; padding-block:64px 72px}
+.hero::before{content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:44px 44px; -webkit-mask-image:linear-gradient(to bottom, #000 20%, transparent 85%); mask-image:linear-gradient(to bottom, #000 20%, transparent 85%)}
+.eyebrow{display:inline-flex; align-items:center; gap:10px; font:500 13px/1 var(--mono); color:var(--muted); background:var(--surface); border:1px solid var(--line); padding:8px 12px; border-radius:999px}
+.eyebrow .live{width:8px; height:8px; border-radius:50%; background:var(--good); box-shadow:0 0 0 3px color-mix(in srgb, var(--good) 25%, transparent)}
+.hero h1{margin-top:22px; font-size:clamp(36px,8.4vw,104px); font-weight:700; letter-spacing:-.035em; line-height:.98}
+.hero h1 .l2{display:block; color:var(--accent)}
+.hero-grid{margin-top:48px; display:grid; grid-template-columns:1.1fr 1fr; gap:56px; align-items:start; padding-top:32px; border-top:1px solid var(--line)}
+.intro{display:grid; gap:24px}
+.tag{font:500 clamp(24px,3vw,38px)/1.25 var(--body); letter-spacing:-.02em; max-width:20em; text-wrap:balance}
+.tag em{font-style:normal; color:var(--accent)}
+.intro .lede{color:var(--muted); max-width:36em; font-size:17px}
+.intro .lede strong{color:var(--ink); font-weight:600}
+.ctas{display:flex; flex-wrap:wrap; gap:10px}
+.btn{display:inline-flex; align-items:center; gap:8px; font:500 14px/1 var(--body); padding:12px 18px; border-radius:999px; border:1px solid var(--line); background:var(--surface); color:var(--ink); text-decoration:none}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.stats{list-style:none; padding:0; display:flex; flex-wrap:wrap; gap:10px 28px; border-top:1px solid var(--line); padding-top:20px}
+.stats li{font-size:14px; color:var(--muted); display:flex; align-items:baseline; gap:8px}
+.stats b{font:600 22px/1 var(--display); color:var(--ink); font-variant-numeric:tabular-nums}
+
+/* sections */
+.sec{padding-block:80px; border-top:1px solid var(--line)}
+.sh{display:grid; gap:12px; margin-bottom:40px}
+.sh .idx{font:500 13px/1 var(--mono); color:var(--accent)}
+.sh h2{font-size:clamp(28px,4vw,48px); font-weight:600; letter-spacing:-.025em}
+
+.about{display:grid; grid-template-columns:1.5fr 1fr; gap:56px; align-items:start}
+.about .text{display:grid; gap:18px; font-size:18px; max-width:38em}
+.about .text p:first-child{font-size:21px; line-height:1.5}
+.about .text strong{font-weight:600}
+.about dl{display:grid; border:1px solid var(--line); border-radius:14px; background:var(--surface)}
+.about dl div{display:grid; grid-template-columns:100px 1fr; gap:12px; padding:14px 18px}
+.about dl div + div{border-top:1px solid var(--line)}
+.about dt{font:500 12px/1.6 var(--mono); color:var(--muted); text-transform:uppercase; letter-spacing:.06em}
+.about dd{font-size:15px}
+
+.roles{display:grid; gap:48px}
+.role{display:grid; grid-template-columns:240px 1fr; gap:40px}
+.role .when{font:500 13px var(--mono); color:var(--muted)}
+.role .org{font:600 20px/1.25 var(--display); margin-top:8px; letter-spacing:-.01em}
+.role .title{font-size:15px; color:var(--muted); margin-top:6px}
+.role .content{display:grid; gap:20px; max-width:760px}
+.role .content > p{font-size:17px}
+.role ul{padding-left:18px; color:var(--muted); display:grid; gap:6px}
+.flow{list-style:none; padding:0; display:grid; grid-template-columns:repeat(4,1fr); gap:10px; counter-reset:st}
+.flow li{counter-increment:st; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px; display:grid; gap:6px; align-content:start; position:relative}
+.flow li::before{content:"0" counter(st); font:500 11px var(--mono); color:var(--accent)}
+.flow li:not(:last-child)::after{content:"→"; position:absolute; right:-10px; top:50%; transform:translate(50%,-50%); font:500 13px var(--mono); color:var(--accent); background:var(--bg); z-index:1; line-height:1}
+.flow h3{font:600 14px/1.3 var(--display)}
+.flow p{font-size:13px; color:var(--muted)}
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chips span{font:500 12px/1 var(--mono); padding:7px 9px; border-radius:7px; background:var(--accent-soft); color:var(--accent)}
+.chips span.alt{background:var(--warm-soft); color:var(--warm)}
+.nums{display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-radius:12px; background:var(--surface)}
+.nums div{padding:16px 18px; display:grid; gap:4px}
+.nums div + div{border-left:1px solid var(--line)}
+.nums b{font:600 24px/1.1 var(--display); font-variant-numeric:tabular-nums}
+.nums span{font-size:13px; color:var(--muted)}
+.paper{font-size:15px; color:var(--muted)}
+.paper strong{color:var(--ink); font-weight:600}
+
+.projects{display:grid; grid-template-columns:repeat(2,1fr); gap:18px}
+.proj{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:24px; display:flex; flex-direction:column; gap:14px; transition:border-color .2s, transform .2s}
+.proj:hover{border-color:var(--accent)}
+@media (prefers-reduced-motion:no-preference){ .proj:hover{transform:translateY(-2px)} }
+.proj .top{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
+.proj .mod{font:500 12px/1 var(--mono); color:var(--accent); letter-spacing:.04em; text-transform:uppercase}
+.proj h3{font-size:21px; font-weight:600; letter-spacing:-.015em}
+.proj p{color:var(--muted); font-size:15px}
+.proj .key{display:flex; align-items:baseline; gap:10px; padding-block:12px; border-block:1px solid var(--line)}
+.proj .key b{font:600 22px/1 var(--display); color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap}
+.proj .key span{font-size:13px; color:var(--muted)}
+.proj .chips{margin-top:auto}
+.proj .chips span{background:var(--surface-2); color:var(--ink); border:1px solid var(--line)}
+
+.skills{display:grid; grid-template-columns:repeat(3,1fr); gap:0; border:1px solid var(--line); border-radius:16px; background:var(--surface); overflow:hidden}
+.skill{padding:22px; display:grid; gap:14px; align-content:start; border-right:1px solid var(--line); border-bottom:1px solid var(--line)}
+.skill:nth-child(3n){border-right:0}
+.skill:nth-last-child(-n+3){border-bottom:0}
+.skill h3{font:600 15px/1.3 var(--display); display:flex; align-items:center; gap:10px}
+.skill h3 i{width:10px; height:10px; border-radius:3px; background:var(--accent); flex:none}
+.skill.eng h3 i{background:var(--warm)}
+
+.awards{display:grid; grid-template-columns:repeat(4,1fr); gap:16px}
+.award{border-top:2px solid var(--ink); padding-top:16px; display:grid; gap:6px; align-content:start}
+.award b{font:600 28px/1.1 var(--display); letter-spacing:-.02em; color:var(--accent)}
+.award h3{font:600 16px/1.3 var(--body)}
+.award p{font-size:14px; color:var(--muted)}
+
+.edu{display:grid; border-top:1px solid var(--line)}
+.edu-row{display:grid; grid-template-columns:1fr auto; gap:6px 24px; padding-block:18px; border-bottom:1px solid var(--line); align-items:baseline}
+.edu-row h3{font:600 18px/1.3 var(--body)}
+.edu-row .yr{font:500 13px var(--mono); color:var(--muted); font-variant-numeric:tabular-nums}
+.edu-row p{grid-column:1/-1; color:var(--muted); font-size:15px}
+.edu-row p b{color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums}
+
+.contact{display:grid; grid-template-columns:1.1fr 1fr; gap:48px; align-items:end}
+.contact h2{font-size:clamp(34px,5.4vw,68px); font-weight:700; letter-spacing:-.035em; line-height:1}
+.contact h2 span{color:var(--accent)}
+.contact .sub{margin-top:18px; color:var(--muted); font-size:17px; max-width:30em}
+.links{display:grid; border:1px solid var(--line); border-radius:16px; background:var(--surface)}
+.link{display:flex; align-items:center; gap:14px; padding:16px 18px; flex-wrap:wrap}
+.link + .link{border-top:1px solid var(--line)}
+.link .label{width:76px; flex:none}
+.link .val{font:500 14px var(--mono); overflow-wrap:anywhere; flex:1; min-width:0; color:var(--ink); text-decoration:none}
+a.link:hover .val{color:var(--accent)}
+a.link{text-decoration:none}
+.copy{font:500 12px/1 var(--mono); border:1px solid var(--line); background:var(--surface-2); color:var(--ink); padding:8px 12px; border-radius:999px; cursor:pointer}
+
+footer{margin-top:24px; padding-top:24px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font:400 12px var(--mono); color:var(--muted)}
+
+@media (max-width:960px){
+  .hero-grid{grid-template-columns:1fr; gap:28px}
+  .about{grid-template-columns:1fr; gap:32px}
+  .role{grid-template-columns:1fr; gap:16px}
+  .skills{grid-template-columns:repeat(2,1fr)}
+  .skill:nth-child(3n){border-right:1px solid var(--line)}
+  .skill:nth-child(2n){border-right:0}
+  .skill:nth-last-child(-n+3){border-bottom:1px solid var(--line)}
+  .skill:nth-last-child(-n+2){border-bottom:0}
+  .awards{grid-template-columns:repeat(2,1fr); gap:28px 16px}
+  .contact{grid-template-columns:1fr; gap:32px}
+}
+@media (max-width:760px){
+  .flow{grid-template-columns:repeat(2,1fr)}
+  .flow li:nth-child(2)::after{display:none}
+  .projects{grid-template-columns:1fr}
+  .nav nav a:not(.cta){display:none}
+}
+@media (max-width:540px){
+  .hero{padding-block:40px 56px}
+  .flow{grid-template-columns:1fr}
+  .flow li::after{display:none}
+  .nums{grid-template-columns:1fr}
+  .nums div + div{border-left:0; border-top:1px solid var(--line)}
+  .skills{grid-template-columns:1fr}
+  .skill{border-right:0 !important; border-bottom:1px solid var(--line) !important}
+  .skill:last-child{border-bottom:0 !important}
+  .awards{grid-template-columns:1fr}
+  .about dl div{grid-template-columns:1fr; gap:2px}
+  .sec{padding-block:60px}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="mark" href="#top">Siddharth Kumbharkar</a>
+    <nav aria-label="Sections">
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <div class="hero">
+    <span class="eyebrow"><span class="live" aria-hidden="true"></span>AI / ML engineer · Pune, India</span>
+    <h1>Siddharth <span class="l2">Kumbharkar</span></h1>
+
+    <div class="hero-grid">
+      <p class="tag">I build machine learning systems that <em>listen</em>, <em>speak</em>, <em>see</em>, <em>search</em> and <em>reason</em>.</p>
+      <div class="intro">
+        <p class="lede">Final-year Computer Engineering student at PICT Pune. I've fine-tuned <strong>speech models</strong> for Smart TVs and for a low-resource Marathi dialect, adapted <strong>LLaMA-2 with QLoRA</strong>, and built a <strong>multi-agent LLM auditor</strong> for deceptive web design at TCS Research.</p>
+        <div class="ctas">
+          <a class="btn" href="https://github.com/SiddharthKumbharkar">GitHub ↗</a>
+          <a class="btn" href="https://linkedin.com/in/siddharth-kumbharkar">LinkedIn ↗</a>
+        </div>
+        <ul class="stats">
+          <li><b>2</b>AI/ML internships</li>
+          <li><b>4</b>end-to-end ML projects</li>
+          <li><b>1st</b>of 60+ teams at a Datathon</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <section class="sec" id="about">
+    <div class="sh"><span class="idx">about</span><h2>Models for messy, real-world input</h2></div>
+    <div class="about">
+      <div class="text">
+        <p>I'm most interested in machine learning that has to work outside clean benchmarks: <strong>regional Indian languages, noisy living rooms, handwritten notes, and web pages designed to mislead</strong>.</p>
+        <p>I like owning the whole path, from collecting and cleaning a dataset to fine-tuning, evaluation and deployment. Lately I've been working with LLM agents: splitting a hard judgment into smaller questions that separate agents answer, then having a judge reconcile them.</p>
+      </div>
+      <dl>
+        <div><dt>Studying</dt><dd>B.E. Computer Engineering, PICT Pune, class of 2027</dd></div>
+        <div><dt>CGPA</dt><dd class="mono">9.38 / 10</dd></div>
+        <div><dt>Focus</dt><dd>LLMs, speech, multi-agent systems, Indic NLP</dd></div>
+        <div><dt>Based in</dt><dd>Pune, India</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="sec" id="experience">
+    <div class="sh"><span class="idx">experience[2]</span><h2>Where I've worked</h2></div>
+    <div class="roles">
+      <article class="role">
+        <div>
+          <p class="when">Jun 2026 – Aug 2026</p>
+          <h3 class="org">TCS Research</h3>
+          <p class="title">Research Intern, Human Aspects of Security</p>
+        </div>
+        <div class="content">
+          <p>Built a multimodal tool that detects dark patterns, the design tricks that push users into choices they didn't intend, on e-commerce and consumer platforms. It follows India's CCPA guidelines.</p>
+          <ol class="flow" aria-label="Pipeline stages">
+            <li><h3>Recorder</h3><p>Captures screenshots and DOM as an operator walks the site with Playwright.</p></li>
+            <li><h3>Signal extraction</h3><p>Turns raw captures into cues that code-first detectors can check.</p></li>
+            <li><h3>Revisit scheduler</h3><p>Plans return visits so pages can be checked again over time.</p></li>
+            <li><h3>LLM judge</h3><p>Agents reason over the evidence and a judge gives the verdict.</p></li>
+          </ol>
+          <div class="chips" aria-label="Agents in the judge stage">
+            <span>asymmetry</span><span>covertness</span><span>deception</span><span>information hiding</span><span>restriction</span><span>complexity</span><span>disparate treatment</span><span class="alt">discovery agent</span><span class="alt">judge</span>
+          </div>
+          <div class="nums">
+            <div><b>13</b><span>categories in a CCPA-aligned taxonomy</span></div>
+            <div><b>7</b><span>attribute agents grounded in dark-pattern research</span></div>
+            <div><b>3 + 1</b><span>live Indian sites plus a benchmark store I built</span></div>
+          </div>
+          <p class="paper">Tested on MakeMyTrip, Cleartrip and Bewakoof, and on <strong>Auralis</strong>, a synthetic store where each pattern can be switched on or off. <strong>A paper on open-world detection is in preparation for FAccT 2027.</strong></p>
+        </div>
+      </article>
+
+      <article class="role">
+        <div>
+          <p class="when">Nov 2025 – Apr 2026</p>
+          <h3 class="org">Cloud Walkers</h3>
+          <p class="title">Machine Learning Intern</p>
+        </div>
+        <div class="content">
+          <p>Fine-tuned a speech-to-text model for voice input on Smart TV remotes.</p>
+          <ul>
+            <li>Improved transcription accuracy in noisy, real-world rooms through dataset preparation, audio augmentation and model optimization.</li>
+            <li>Worked with engineers to integrate the model into production pipelines for voice-driven TV navigation.</li>
+          </ul>
+          <div class="chips"><span>Speech-to-text</span><span>Audio augmentation</span><span>Model optimization</span><span>Production integration</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec" id="projects">
+    <div class="sh"><span class="idx">projects[4]</span><h2>Things I've built</h2></div>
+    <div class="projects">
+      <article class="proj">
+        <div class="top"><span class="mod">Speech · Indic NLP</span></div>
+        <h3>Text-to-speech for the Varhadi dialect of Marathi</h3>
+        <p>Collected and curated a speech dataset for Varhadi, a dialect with very little recorded data, then fine-tuned Coqui TTS on it. I handled the whole pipeline: audio preprocessing, text normalization, training and evaluation.</p>
+        <div class="key"><b>Low-resource</b><span>better pronunciation and naturalness</span></div>
+        <div class="chips"><span>Coqui TTS</span><span>Python</span><span>Dataset curation</span><span>Audio preprocessing</span></div>
+      </article>
+      <article class="proj">
+        <div class="top"><span class="mod">RAG · Search · OCR</span></div>
+        <h3>Hybrid search engine for study materials</h3>
+        <p>A full-stack search platform that combines semantic search in Qdrant with keyword filtering in SQLite. It reads handwritten notes with OCR and uses a RAG pipeline to write summaries with context.</p>
+        <div class="key"><b>~60%</b><span>less time spent searching, across 500+ indexed pages</span></div>
+        <div class="chips"><span>Qdrant</span><span>SQLite</span><span>RAG</span><span>Vision API OCR</span><span>LangChain</span></div>
+      </article>
+      <article class="proj">
+        <div class="top"><span class="mod">LLM fine-tuning</span></div>
+        <h3>LLaMA-2 mental-health support chatbot</h3>
+        <p>Fine-tuned LLaMA-2-7B with QLoRA, using 4-bit quantization and LoRA adapters, on a curated mental-health dataset so it replies with empathy and care. Tracked training in Weights &amp; Biases and evaluated response alignment with TRL.</p>
+        <div class="key"><b>7B · 4-bit</b><span>fine-tuned on modest hardware</span></div>
+        <div class="chips"><span>LLaMA-2</span><span>QLoRA</span><span>LoRA</span><span>W&amp;B</span><span>TRL</span></div>
+      </article>
+      <article class="proj">
+        <div class="top"><span class="mod">Computer vision</span></div>
+        <h3>Leaf disease detection with crop advice</h3>
+        <p>Trained a CNN on 5,000+ leaf images covering 7 diseases and deployed it with Flask. It also gives crop-rotation and companion-planting advice, which raised yield by about 25% in simulation.</p>
+        <div class="key"><b>92.3%</b><span>accuracy across 7 disease classes</span></div>
+        <div class="chips"><span>TensorFlow</span><span>CNN</span><span>Flask</span><span>Deployment</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec" id="skills">
+    <div class="sh"><span class="idx">skills[6]</span><h2>What I work with</h2></div>
+    <div class="skills">
+      <div class="skill">
+        <h3><i aria-hidden="true"></i>LLMs &amp; agents</h3>
+        <div class="chips"><span>LLaMA-2</span><span>LangChain</span><span>RAG pipelines</span><span>Fine-tuning</span><span>QLoRA / LoRA</span><span>TRL</span><span>Multi-agent systems</span><span>LLM-as-judge</span></div>
+      </div>
+      <div class="skill">
+        <h3><i aria-hidden="true"></i>Speech</h3>
+        <div class="chips"><span>Coqui TTS</span><span>Speech-to-text</span><span>Audio augmentation</span><span>Audio preprocessing</span><span>Text normalization</span></div>
+      </div>
+      <div class="skill">
+        <h3><i aria-hidden="true"></i>Vision &amp; multimodal</h3>
+        <div class="chips"><span>CNNs</span><span>OCR (Vision API)</span><span>Multimodal detection</span><span>Image classification</span></div>
+      </div>
+      <div class="skill">
+        <h3><i aria-hidden="true"></i>ML frameworks</h3>
+        <div class="chips"><span>TensorFlow</span><span>scikit-learn</span><span>Weights &amp; Biases</span><span>Model deployment</span><span>Evaluation</span></div>
+      </div>
+      <div class="skill">
+        <h3><i aria-hidden="true"></i>Data &amp; retrieval</h3>
+        <div class="chips"><span>Qdrant</span><span>Vector databases</span><span>SQL</span><span>SQLite</span><span>Data preprocessing</span><span>Dataset curation</span><span>Web scraping</span></div>
+      </div>
+      <div class="skill eng">
+        <h3><i aria-hidden="true"></i>Engineering &amp; cloud</h3>
+        <div class="chips"><span class="alt">Python</span><span class="alt">C++</span><span class="alt">Flask</span><span class="alt">FastAPI</span><span class="alt">Playwright</span><span class="alt">Git</span><span class="alt">GitHub</span><span class="alt">AWS</span><span class="alt">Azure</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="recognition">
+    <div class="sh"><span class="idx">awards[4]</span><h2>Recognition</h2></div>
+    <div class="awards">
+      <div class="award"><b>1st</b><h3>Intercollege Datathon</h3><p>Won against 60+ teams with a predictive analytics solution.</p></div>
+      <div class="award"><b>Finalist</b><h3>Tech Fiesta Hackathon</h3><p>Hosted at PICT, Pune.</p></div>
+      <div class="award"><b>B2 · 88%</b><h3>Goethe-Zertifikat</h3><p>German language certification.</p></div>
+      <div class="award"><b>A–Z ML</b><h3>Machine Learning course</h3><p>Completed on Udemy.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="education">
+    <div class="sh"><span class="idx">education[3]</span><h2>Education</h2></div>
+    <div class="edu">
+      <div class="edu-row"><h3>Pune Institute of Computer Technology (PICT)</h3><span class="yr">2023 – 2027</span><p>B.E. Computer Engineering · CGPA <b>9.38 / 10</b></p></div>
+      <div class="edu-row"><h3>Namo RIMS Junior College, Pune</h3><span class="yr">2021 – 2023</span><p>Class 12 · <b>83.4%</b></p></div>
+      <div class="edu-row"><h3>St. Vincent's High School, Pune</h3><span class="yr">2010 – 2021</span><p>Class 10 · <b>93.6%</b></p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="contact">
+    <div class="contact">
+      <div>
+        <span class="label" style="color:var(--accent)">contact</span>
+        <h2 style="margin-top:14px">Let's build something <span>together.</span></h2>
+        <p class="sub">I'm open to AI/ML roles, research internships and collaborations. Reach me by email or phone.</p>
+      </div>
+      <div class="links">
+        <div class="link"><span class="label">Email</span><span class="val" id="mail">siddharthkumbharkar1503@gmail.com</span><button class="copy" type="button" id="copyMail">Copy</button></div>
+        <div class="link"><span class="label">Phone</span><span class="val" id="phone">+91 86696 52975</span><button class="copy" type="button" id="copyPhone">Copy</button></div>
+      </div>
+    </div>
+    <footer>
+      <span>Siddharth Kumbharkar · Pune, India</span>
+      <span>Updated September 2026</span>
+    </footer>
+  </section>
+</main>
+
+<script>
+(function(){
+  [['copyMail','mail'],['copyPhone','phone']].forEach(function(p){
+    var c = document.getElementById(p[0]), m = document.getElementById(p[1]);
+    c.addEventListener('click', function(){
+      function done(){ c.textContent = 'Copied'; setTimeout(function(){ c.textContent = 'Copy'; }, 1600); }
+      function sel(){ var r = document.createRange(); r.selectNodeContents(m); var s = getSelection(); s.removeAllRanges(); s.addRange(r); c.textContent = 'Selected'; }
+      try { navigator.clipboard.writeText(m.textContent.replace(/\s/g, '')).then(done, sel); } catch (e) { sel(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
